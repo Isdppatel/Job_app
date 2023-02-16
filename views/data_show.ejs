@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+
+    <title>Data_show</title>
+</head>
+
+<body>
+    <form name="myform" action="/datashow" >
+    <div class="jumbotron">
+
+        <div class="search_box">
+            <input class="text_search" type="text" name="searchVal" id="search_val" placeholder="Search.. "
+                value="<%=serachV%>">
+            <select name="options">
+                <option name="AND_val" value="AND">AND</option>
+                <option name="OR_val" value="OR">OR</option>
+            </select>
+            <input type="submit" value="Go">
+        </div>
+
+
+
+
+        <h1 class="display-4 text-center">Basic_Details</h1>
+        <table class="table table-striped" border="1" cellspacing="0">
+            <thead>
+                <tr>
+                    <td scope="col">id</td>
+                    <td scope="col">FirstName</td>
+                    <td scope="col">LastName</td>
+                    <td width="100px" scope="col">designation</td>
+                    <td width="100px" scope="col">address1</td>
+                    <td width="100px" scope="col">address2</td>
+                    <td width="50px" scope="col">email</td>
+                    <td scope="col">Contact</td>
+                    <td scope="col">gender</td>
+                    <td scope="col">city</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(basic_table.length){ for(var i=0; i < basic_table.length; i++) {%>
+                    <tr>
+                        <th scope="row">
+                            <%= basic_table[i].id %>
+                        </th>
+                        <td>
+                            <%= basic_table[i].first_name%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].last_name%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].designation%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].address1%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].address2%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].email%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].phone_num%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].gender%>
+                        </td>
+                        <td>
+                            <%= basic_table[i].city%>
+                        </td>
+
+                    </tr>
+                    <% } }%>
+
+            </tbody>
+        </table>
+    </div>
+    </form>
+</body>
+
+</html>
