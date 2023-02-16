@@ -176,77 +176,78 @@ app.post('/jobform', (req, res) => {
         // console.log("added prefed location");
     });
 
-    connection.query(`select * from job_new.basic_details;`,(err, results1) => {  
-            res.render('search.ejs',{basic_table:results1 ,serachV:" "});
-       
+    connection.query(`select * from job_new.basic_details;`, (err, results1) => {
+        res.render('search.ejs', { basic_table: results1, serachV: " " });
+
     })
 })
 app.get('/search', (req, res) => {
     searchVal = req.query.searchVal;
     console.log(searchVal);
-  
-    optrVal=req.query.options;
-    console.log(optrVal);
-    let symbol = ['^', '$', '%', '~', '_'];
-    let newStr = "";
-    var count = 0;
-    for (var i = 0; i < searchVal.length; i++) {
-        if (symbol.includes(searchVal[i])) {
-            newStr += " " + searchVal[i];
-            count++;
+    if (searchVal != " ") {
+        optrVal = req.query.options;
+        console.log(optrVal);
+        let symbol = ['^', '$', '%', '~', '_'];
+        let newStr = "";
+        var count = 0;
+        for (var i = 0; i < searchVal.length; i++) {
+            if (symbol.includes(searchVal[i])) {
+                newStr += " " + searchVal[i];
+                count++;
+            }
+            else {
+                newStr += searchVal[i];
+            }
         }
-        else {
-            newStr += searchVal[i];
+        var spiltarr = newStr.split(' ');
+
+        var queryans = "where";
+
+        for (let val of spiltarr) {
+            if (val[0] == "$") {
+
+                count--;
+                if (count)
+                    queryans += ` last_name LIKE '${val.substring(1)}%' ${optrVal}`
+                else
+                    queryans += ` last_name LIKE '${val.substring(1)}%'`
+            }
+            if (val[0] == "^") {
+
+                count--;
+                if (count)
+                    queryans += ` first_name LIKE '${val.substring(1)}%' ${optrVal}`
+                else
+                    queryans += ` first_name LIKE '${val.substring(1)}%'`
+
+            }
+            if (val[0] == "~") {
+                if (count)
+                    queryans += ` phone_num LIKE '${val.substring(1)}%' ${optrVal}`
+                else
+                    queryans += ` phone_num LIKE '${val.substring(1)}%'`
+
+            }
+            if (val[0] == "_") {
+                count--;
+                if (count)
+                    queryans += ` city LIKE '${val.substring(1)}%' ${optrVal}`
+                else
+                    queryans += ` city LIKE '${val.substring(1)}%'`
+            }
+            if (val[0] == "%") {
+                count--;
+                if (count)
+                    queryans += ` email LIKE '${val.substring(1)}%' ${optrVal}`
+                else
+                    queryans += ` email LIKE '${val.substring(1)}%'`
+            }
         }
+        console.log(queryans);
+        connection.query(`select * from job_new.basic_details ${queryans};`, (err, results) => {
+            res.render('search.ejs', { basic_table: results, serachV: searchVal });
+        })
     }
-    var spiltarr = newStr.split(' ');
-  
-    var queryans = "where";
-
-    for (let val of spiltarr) {
-        if (val[0] == "$") {
-
-            count--;
-            if (count)
-                queryans += ` last_name LIKE '${val.substring(1)}%' ${optrVal}`
-            else
-                queryans += ` last_name LIKE '${val.substring(1)}%'`
-        }
-        if (val[0] == "^") {
-
-            count--;
-            if (count)
-                queryans += ` first_name LIKE '${val.substring(1)}%' ${optrVal}`
-            else
-                queryans += ` first_name LIKE '${val.substring(1)}%'`
-
-        }
-        if (val[0] == "~") {
-            if (count)
-                queryans += ` phone_num LIKE '${val.substring(1)}%' ${optrVal}`
-            else
-                queryans += ` phone_num LIKE '${val.substring(1)}%'`
-
-        }
-        if (val[0] == "_") {
-            count--;
-            if (count)
-                queryans += ` city LIKE '${val.substring(1)}%' ${optrVal}`
-            else
-                queryans += ` city LIKE '${val.substring(1)}%'`
-        }
-        // if (val[0] == "%") {
-        //     count--;
-        //     if (count)
-        //         queryans += ` student_clgName LIKE '${val.substring(1)}%' ${optrVal}`
-        //     else
-        //         queryans += ` student_clgName LIKE '${val.substring(1)}%'`
-        // }
-    }
-    console.log(queryans);
-    connection.query(`select * from job_new.basic_details ${queryans};`, (err, results) => {
-        res.render('search.ejs', { basic_table: results ,serachV:searchVal});
-    })
 
 });
 
