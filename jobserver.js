@@ -44,140 +44,160 @@ app.get('/form', (req, res) => {
 app.post('/jobform', (req, res) => {
 
     const { fname, lname, email_name, Designation, Address1, Address2, phone_name, city_name, state_name, gender, RelationShip, date_name, zipcode_name } = req.body;
-    // console.log(gender);
+
     query_details = `insert into basic_details(first_name,last_name,designation,address1,address2,email,phone_num,state,gender,zipcode,realtionship,date,city) values("${fname}","${lname}","${Designation}","${Address1}","${Address2}","${email_name}","${phone_name}","${state_name}","${gender}","${zipcode_name}","${RelationShip}","${date_name}","${city_name}");`
-    // console.log(query_details);
 
     connection.query(query_details, (err, result) => {
-        // res.render('app.ejs', { data: result })
+        
         if (err) console.log(err.message);
         // console.log("added Basic");
+        var c_id=result.insertId;
+        console.log(result);
 
-    })
 
 
-    const { course, board, passingyear, percentage } = req.body;
-    // console.log(course,board,passingyear,percentage);
-    query_val = "";
-    console.log(typeof (course));
-    if (typeof (course) == "string") {
-        query_val = `insert into edu_detail (c_name,board_name,pass_year,percentage) values('${course}','${board}','${passingyear}','${percentage}');`
-        // console.log(query_val);
-        connection.query(query_val, (err, result) => {
-            if (err) console.log(err.message);
-            // console.log("added edu_detail");
-        });
-    }
-    else {
-        for (let i = 0; i < course.length; i++) {
-            query_val = `insert into edu_detail (c_name,board_name,pass_year,percentage) values('${course[i]}','${board[i]}','${passingyear[i]}','${percentage[i]}');`
+
+        const { course, board, passingyear, percentage } = req.body;
+
+        query_val = "";
+        console.log(typeof (course));
+        if (typeof (course) == "string") {
+            query_val = `insert into edu_detail (c_name,board_name,pass_year,percentage,c_id) values('${course}','${board}','${passingyear}','${percentage}','${c_id}');`
+
             connection.query(query_val, (err, result) => {
                 if (err) console.log(err.message);
                 // console.log("added edu_detail");
             });
-            // console.log(query_val);
         }
-    }
-
-
-
-    const { php, laravel, Oracle, Mysql, level0, level1, level2, level3 } = req.body;
-    const tech_arr = [php, laravel, Oracle, Mysql];
-    const level = [level0, level1, level2, level3];
-    for (let i = 0; i < tech_arr.length; i++) {
-
-
-        if (typeof (tech_arr[i]) == "string" && typeof (level[i]) == "string") {
-            query_tech = `insert into tech_table (tech_name,level) values('${tech_arr[i]}','${level[i]}');`
-            connection.query(query_tech, (err, result) => {
-                if (err) console.log(err.message);
-                // console.log("added tech_detail");
-            });
-        }
-    }
-
-    connection.query(`select value from option_master where s_id=4;`, (err, result) => {
-        var query_lan;
-        for (let i = 0; i < result.length; i++) {
-
-            var vj = req.body[result[i].value];
-            var r = req.body[result[i].value + "r"];
-            var w = req.body[result[i].value + "w"];
-            var s = req.body[result[i].value + "s"];
-            if (typeof (r) == "undefined") r = "0";
-            if (typeof (w) == "undefined") w = "0";
-            if (typeof (s) == "undefined") s = "0";
-
-            if (typeof (vj) == "string") {
-                query_lan = `insert into lang_table (lang_name,read_name,write_name,speak_name) values('${vj}','${r}','${w}','${s}');`;
-
-                // console.log(query_lan);
-
-                connection.query(query_lan, (err, results) => {
+        else {
+            for (let i = 0; i < course.length; i++) {
+                query_val = `insert into edu_detail (c_name,board_name,pass_year,percentage,c_id) values('${course[i]}','${board[i]}','${passingyear[i]}','${percentage[i]}','${c_id}');`
+                connection.query(query_val, (err, result) => {
                     if (err) console.log(err.message);
-                    // console.log("inserted lang_table");
+                    // console.log("added edu_detail");
+                });
+
+            }
+        }
+
+
+
+        const { php, laravel, Oracle, Mysql, level0, level1, level2, level3 } = req.body;
+        const tech_arr = [php, laravel, Oracle, Mysql];
+        const level = [level0, level1, level2, level3];
+        for (let i = 0; i < tech_arr.length; i++) {
+
+
+            if (typeof (tech_arr[i]) == "string" && typeof (level[i]) == "string") {
+                query_tech = `insert into tech_table (tech_name,level,c_id) values('${tech_arr[i]}','${level[i]}','${c_id}');`
+                connection.query(query_tech, (err, result) => {
+                    if (err) console.log(err.message);
+                    // console.log(query_tech);
+                });
+            }
+        }
+
+
+
+
+        // connection.query(`select value from option_master where s_id=5;`, (err, result) => {
+        //     var tech_arr;
+        //     var level;
+
+        //     for (let i = 0; i < result.length; i++) {
+        //         tech_arr = req.body
+        //         level = req.body["r" + i];
+        //         // console.log(tech_arr);
+        //         console.log(tech_arr);
+
+        //     }
+        // })
+
+
+        connection.query(`select value from option_master where s_id=4;`, (err, result) => {
+            var query_lan;
+            for (let i = 0; i < result.length; i++) {
+
+                var vj = req.body[result[i].value];
+                var r = req.body[result[i].value + "r"];
+                var w = req.body[result[i].value + "w"];
+                var s = req.body[result[i].value + "s"];
+                if (typeof (r) == "undefined") r = "0";
+                if (typeof (w) == "undefined") w = "0";
+                if (typeof (s) == "undefined") s = "0";
+
+                if (typeof (vj) == "string") {
+                    query_lan = `insert into lang_table (lang_name,read_name,write_name,speak_name,c_id) values('${vj}','${r}','${w}','${s}','${c_id}');`;
+
+                    // console.log(query_lan);
+
+                    connection.query(query_lan, (err, results) => {
+                        if (err) console.log(err.message);
+                        // console.log("inserted lang_table");
+                    })
+                }
+            }
+        })
+
+
+        const { company_name, designation_name, from_date, to_date } = req.body;
+        var query_val1 = "";
+
+        if (typeof (company_name) == "string") {
+            query_val1 = `insert into work_table (c_name,designation,from_name,to_name,c_id) values('${company_name}','${designation_name}','${from_date}','${to_date}','${c_id}');`
+            connection.query(query_val1, (err, results) => {
+                if (err) console.log(err.message);
+                console.log("inserted exp");
+            })
+
+        }
+        else {
+            for (let i = 0; i < company_name.length; i++) {
+                query_val1 = `insert into work_table (c_name,designation,from_name,to_name,c_id) values('${company_name[i]}','${designation_name[i]}','${from_date[i]}','${to_date[i]}','${c_id}');`
+                connection.query(query_val1, (err, results) => {
+                    if (err) console.log(err.message);
+
                 })
             }
         }
-    })
-
-
-    const { Companyname, Designation_name, from_date, to_date } = req.body;
-    query_val1 = "";
-    // console.log(typeof (Companyname));
-    if (typeof (Companyname) == "string") {
-        query_val1 = `insert into work_table (c_name,Designation_name,From,to) values('${Companyname}','${Designation_name}','${from_date}','${to_date}');`
-        connection.query(query_val1, (err, results) => {
-            if (err) console.log(err.message);
-            // console.log("inserted exp");
-        })
         // console.log(query_val1);
-    }
-    else {
-        for (let i = 0; i < Companyname.length; i++) {
-            query_val1 = `insert into work_table (c_name,Designation_name,From,to) values('${Companyname[i]}','${Designation_name[i]}','${from_date[i]}','${to_date[i]}');`
-            connection.query(query_val1, (err, results) => {
-                if (err) console.log(err.message);
-                // console.log("inserted exp");
-            })
-            // console.log(query_val1);
-        }
-    }
 
-    const { referance, contact, relation } = req.body;
-    var query_val2 = "";
-    // console.log(typeof (referance));
-    if (typeof (referance) == "string") {
-        query_val2 = `insert into ref_table (name_ref,contact,relation) values('${referance}','${contact}','${relation}');`
-        connection.query(query_val2, (err, results) => {
-            if (err) console.log(err.message);
-            // console.log("inserted ref");
-        })
+        const { referance, contact, relation } = req.body;
+        var query_val2 = "";
 
-    }
-    else {
-        for (let i = 0; i < referance.length; i++) {
-            query_val2 = `insert into ref_table (name_ref,contact,relation) values('${referance[i]}','${contact[i]}','${relation[i]}');`
+        if (typeof (referance) == "string") {
+            query_val2 = `insert into ref_table (name_ref,contact,relation,c_id) values('${referance}','${contact}','${relation}','${c_id}');`
             connection.query(query_val2, (err, results) => {
                 if (err) console.log(err.message);
                 // console.log("inserted ref");
             })
 
         }
-    }
+        else {
+            for (let i = 0; i < referance.length; i++) {
+                query_val2 = `insert into ref_table (name_ref,contact,relation,c_id) values('${referance[i]}','${contact[i]}','${relation[i]}','${c_id}');`
+                connection.query(query_val2, (err, results) => {
+                    if (err) console.log(err.message);
+                    // console.log("inserted ref");
+                })
+
+            }
+        }
 
 
-    const { location_name, notice_period, expected, current, department_name } = req.body;
-    // console.log(location_name);
-    var query_val3;
-    query_val3 = `insert into prefed_table (prefed_loc,notice_per,dept,curr_ctc,expected_ctc) values('${location_name}','${notice_period}','${department_name}','${current}','${expected}');`
-    connection.query(query_val3, (err, results) => {
-        if (err) console.log(err.message);
-        // console.log("added prefed location");
-    });
+        const { location_name, notice_period, expected, current, department_name } = req.body;
 
-    connection.query(`select * from job_new.basic_details;`, (err, results1) => {
-        res.render('search.ejs', { basic_table: results1, serachV: " " });
+        var query_val3;
+        query_val3 = `insert into prefed_table (prefed_loc,notice_per,dept,curr_ctc,expected_ctc,c_id) values('${location_name}','${notice_period}','${department_name}','${current}','${expected}','${c_id}');`
+        connection.query(query_val3, (err, results) => {
+            if (err) console.log(err.message);
+            // console.log("added prefed location");
+        });
+
+        connection.query(`select * from job_new.basic_details;`, (err, results1) => {
+            res.render('search.ejs', { basic_table: results1, serachV: " " });
+
+        })
 
     })
 })
@@ -240,7 +260,7 @@ app.get('/search', (req, res) => {
                 if (count)
                     queryans += ` email LIKE '${val.substring(1)}%' ${optrVal}`
                 else
-                    queryans += ` email LIKE '${val.substring(1)}%'`
+                    queryans += ` email LIKE ' {val.substring(1)}%'`
             }
         }
         console.log(queryans);
@@ -259,4 +279,3 @@ app.listen(PORT, () => {
 
 connection.connect();
 
-// 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
